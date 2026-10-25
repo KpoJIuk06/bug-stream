@@ -1,0 +1,14 @@
+{
+  "extDescription": {
+    "message": "Bug reports for testers: tab video, console, network requests and user actions — in one link."
+  },
+  "actionTitle": {
+    "message": "Bug Stream — record a bug"
+  },
+  "cmdToggle": {
+    "message": "Start or stop recording the tab"
+  },
+  "cmdReplay": {
+    "message": "Instant replay: save the last 2 minutes"
+  }
+}

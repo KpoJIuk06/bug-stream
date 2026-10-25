@@ -1,0 +1,11 @@
+# TLS_MODE=proxy: HTTPS terminates at the corporate load balancer, plain HTTP arrives here.
+map $http_x_forwarded_proto $bs_proto {
+    default $http_x_forwarded_proto;
+    ""      $scheme;
+}
+
+server {
+    listen 80 default_server;
+    server_name ${APP_DOMAIN};
+    include /etc/nginx/snippets/app.conf;
+}

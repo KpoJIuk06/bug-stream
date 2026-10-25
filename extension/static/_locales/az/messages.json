@@ -1,0 +1,14 @@
+{
+  "extDescription": {
+    "message": "Testçilər üçün xəta hesabatları: tab videosu, konsol, şəbəkə sorğuları və istifadəçi hərəkətləri — bir linkdə."
+  },
+  "actionTitle": {
+    "message": "Bug Stream — xətanı qeydə al"
+  },
+  "cmdToggle": {
+    "message": "Tabın qeydini başlat və ya dayandır"
+  },
+  "cmdReplay": {
+    "message": "Instant replay: son 2 dəqiqəni saxla"
+  }
+}

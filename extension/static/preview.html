@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>New report — Bug Stream</title>
+    <link rel="icon" href="icons/32.png" />
+    <link rel="stylesheet" href="rrweb-player.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="preview">
+    <header>
+      <span class="logo"><img src="icons/32.png" alt="" />Bug Stream</span>
+      <span class="muted" id="kind-label" data-i18n>New report</span>
+      <span class="spacer"></span>
+      <span class="faint" id="user-label"></span>
+    </header>
+
+    <div id="missing" class="center panel hidden">
+      <h1 style="font-size: 18px; margin-bottom: 6px" data-i18n>Recording not found</h1>
+      <p class="muted" id="missing-text" data-i18n>It has already been saved or deleted. You can close this tab.</p>
+    </div>
+
+    <div id="login" class="center panel hidden">
+      <h1 style="font-size: 18px; margin-bottom: 6px" data-i18n>Sign in to save the report</h1>
+      <p class="muted" style="margin-bottom: 16px" data-i18n>The recording is kept in the extension and will not be lost.</p>
+      <div id="login-root"></div>
+    </div>
+
+    <div id="editor" class="layout hidden">
+      <section>
+        <div class="panel media" id="media"></div>
+        <div class="panel" style="margin-top: 12px">
+          <div class="track" id="track" data-i18n-title="Click to jump to this moment" title="Click to jump to this moment"><div class="head" id="head"></div></div>
+          <div class="counters" id="counters"></div>
+        </div>
+        <div class="panel events">
+          <h2 data-i18n>Recorded events</h2>
+          <ul id="events"></ul>
+        </div>
+      </section>
+
+      <aside>
+        <form class="panel form" id="form">
+          <h1 data-i18n>Bug report</h1>
+          <p class="sub mono" id="page-url"></p>
+
+          <label class="field">
+            <span data-i18n>Title</span>
+            <input id="title" maxlength="500" required placeholder="What went wrong" data-i18n-placeholder="What went wrong" />
+          </label>
+          <label class="field">
+            <span data-i18n>Description</span>
+            <textarea
+              id="description"
+              rows="5"
+              placeholder="Steps to reproduce, what you expected, what you got"
+              data-i18n-placeholder="Steps to reproduce, what you expected, what you got"
+            ></textarea>
+          </label>
+          <div class="field">
+            <span id="project-label" data-i18n>Project</span>
+            <div class="combo" id="project-combo">
+              <input
+                id="project-input"
+                type="text"
+                role="combobox"
+                aria-labelledby="project-label"
+                aria-expanded="false"
+                aria-controls="project-list"
+                autocomplete="off"
+                placeholder="Search by name, key or Jira ID"
+                data-i18n-placeholder="Search by name, key or Jira ID"
+              />
+              <ul class="combo-list hidden" id="project-list" role="listbox"></ul>
+            </div>
+            <select id="project" class="hidden" aria-hidden="true" tabindex="-1"><option value=""></option></select>
+          </div>
+          <p class="match hidden" id="match"></p>
+          <label class="field hidden" id="service-field">
+            <span data-i18n>Service</span>
+            <select id="service"></select>
+          </label>
+          <label class="field">
+            <span data-i18n>Environment</span>
+            <select id="environment">
+              <option value="" data-i18n>Not specified</option>
+            </select>
+            <small id="env-hint" class="hidden" data-i18n>Taken from the service — you can pick another one</small>
+          </label>
+          <div class="row2">
+            <label class="field">
+              <span data-i18n>Severity</span>
+              <select id="severity">
+                <option value="" data-i18n>Not specified</option>
+                <option value="LOW" data-i18n>Low</option>
+                <option value="MEDIUM" data-i18n>Medium</option>
+                <option value="HIGH" data-i18n>High</option>
+                <option value="CRITICAL" data-i18n>Critical</option>
+              </select>
+            </label>
+            <label class="field">
+              <span data-i18n>Tags</span>
+              <input id="tags" placeholder="comma separated" data-i18n-placeholder="comma separated" />
+            </label>
+          </div>
+
+          <div class="tracker hidden" id="jira-field">
+            <label class="check">
+              <input type="checkbox" id="send-jira" />
+              <span
+                ><span id="jira-label"></span
+                ><small data-i18n>After the report is saved — an issue with links to the video, console and network</small></span
+              >
+            </label>
+            <p class="tracker-result warn hidden" id="jira-notice"></p>
+          </div>
+
+          <div id="error" class="error-box hidden"></div>
+          <div class="progress hidden" id="progress"><div id="progress-bar"></div></div>
+          <div class="buttons">
+            <button class="btn primary big" type="submit" id="save" data-i18n>Save report</button>
+            <button class="btn danger" type="button" id="discard" data-i18n>Delete recording</button>
+          </div>
+        </form>
+
+        <div class="panel done hidden" id="done">
+          <div class="check">✓</div>
+          <h1 data-i18n>Report saved</h1>
+          <p class="muted" data-i18n>You can share the link with your colleagues.</p>
+          <p class="tracker-result hidden" id="tracker-result"></p>
+          <div class="buttons" style="display: grid; gap: 8px">
+            <a class="btn primary big" id="open-report" target="_blank" data-i18n>Open report</a>
+            <button class="btn" id="copy-link" type="button" data-i18n>Copy link</button>
+            <button class="btn ghost" id="close-tab" type="button" data-i18n>Close tab</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <script src="preview.js"></script>
+  </body>
+</html>

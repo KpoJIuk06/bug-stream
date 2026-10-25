@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: bugtrack
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/bugtrack}
+    username: ${DB_USER:bugtrack}
+    password: ${DB_PASSWORD:bugtrack}
+  flyway:
+    enabled: true            # migrations from classpath:db/migration run on start (see FlywayConfig)
+  servlet:
+    multipart:
+      max-file-size: 1GB     # recording video (up to 30 minutes)
+      max-request-size: 1100MB
+
+server:
+  port: 8080
+  forward-headers-strategy: framework
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}            # at least 32 characters
+    access-ttl: 15m
+    refresh-ttl-web: 7d
+    refresh-ttl-extension: 30d
+  bootstrap-admin:                   # created on start when the database has no users
+    email: ${ADMIN_EMAIL:}
+    password: ${ADMIN_PASSWORD:}
+    full-name: ${ADMIN_NAME:Administrator}
+  cors:
+    allowed-origin-patterns: ${CORS_ORIGINS:http://localhost:*,chrome-extension://*}
+  storage:
+    root: ${STORAGE_ROOT:./storage}
+  # Site address for links in e-mails, Jira issues and share links: https://bugs.example.com
+  public-url: ${APP_PUBLIC_URL:http://localhost}
+  # Encryption key for Jira tokens. Empty: JWT_SECRET is used.
+  integration-secret: ${INTEGRATION_SECRET:}
+  jira:
+    status-sync: ${JIRA_STATUS_SYNC:PT5M}  # how often Jira issue statuses are refreshed (label "bugstream")
+  mail:
+    host: ${SMTP_HOST:}              # empty: no e-mails
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    from: ${SMTP_FROM:adtask@localhost}
+    starttls: ${SMTP_STARTTLS:true}
+    ssl: ${SMTP_SSL:false}
+  ldap:                              # Active Directory / LDAP sign-in; empty url = local accounts only
+    url: ${LDAP_URL:}
+    base-dn: ${LDAP_BASE_DN:}
+    bind-dn: ${LDAP_BIND_DN:}
+    bind-password: ${LDAP_BIND_PASSWORD:}
+    user-filter: ${LDAP_USER_FILTER:}
+    email-attribute: ${LDAP_EMAIL_ATTRIBUTE:mail}
+    name-attribute: ${LDAP_NAME_ATTRIBUTE:displayName}
+    username-attribute: ${LDAP_USERNAME_ATTRIBUTE:sAMAccountName}
+    group-roles: ${LDAP_GROUP_ROLES:}
+    default-role: ${LDAP_DEFAULT_ROLE:DEVELOPER}
+    timeout: 5s

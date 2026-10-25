@@ -1,0 +1,16 @@
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://nexus.example.com/repository/maven-public/</url>
+    </mirror>
+  </mirrors>
+  <servers>
+    <server>
+      <id>nexus</id>
+      <username>ci-reader</username>
+      <password>CHANGE_ME</password>
+    </server>
+  </servers>
+</settings>

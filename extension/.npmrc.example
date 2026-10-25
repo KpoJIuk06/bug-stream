@@ -1,0 +1,5 @@
+# Copy to .npmrc and set the Nexus npm repository (group or proxy of registry.npmjs.org)
+registry=https://nexus.example.local/repository/npm-group/
+# If Nexus requires sign-in:
+# //nexus.example.local/repository/npm-group/:_auth=${NEXUS_NPM_AUTH}
+# always-auth=true

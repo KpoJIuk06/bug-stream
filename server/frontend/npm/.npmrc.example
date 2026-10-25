@@ -1,0 +1,3 @@
+registry=https://nexus.example.com/repository/npm-group/
+//nexus.example.com/repository/npm-group/:_auth=BASE64_LOGIN_COLON_PASSWORD
+always-auth=true

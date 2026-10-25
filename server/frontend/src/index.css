@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/*
+ * Bug Stream — design tokens.
+ * Cool light background, white panels, teal primary color.
+ * Event colors (ev-*) — one encoding for the track under the video and the DevTools tabs.
+ */
+@theme {
+  --font-sans: "Golos Text", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-fog: #f3f5f8;
+  --color-surface: #ffffff;
+  --color-ink: #18202c;
+  --color-muted: #5b6676;
+  --color-faint: #8a94a3;
+  --color-line: #dce1e8;
+  --color-line-soft: #e9edf2;
+
+  --color-primary: #0d6e6e;
+  --color-primary-dark: #0a5757;
+  --color-primary-soft: #e3f1f0;
+
+  --color-ev-error: #d1343e;
+  --color-ev-error-soft: #fdecee;
+  --color-ev-warn: #b7791f;
+  --color-ev-warn-soft: #fdf4e3;
+  --color-ev-network: #2b6cb0;
+  --color-ev-network-soft: #e8f0fb;
+  --color-ev-action: #6b46c1;
+  --color-ev-action-soft: #efeafb;
+  --color-ev-nav: #2f855a;
+  --color-ev-nav-soft: #e6f4ec;
+
+  --radius-control: 7px;
+  --radius-panel: 10px;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-fog text-ink font-sans text-[14px] leading-[1.5];
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--color-primary-soft);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@utility select-chevron {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5 6 7.5 9 4.5' fill='none' stroke='%238a94a3' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: right 10px center;
+}

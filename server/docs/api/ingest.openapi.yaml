@@ -1,0 +1,199 @@
+openapi: 3.1.0
+info:
+  title: Bug Stream — report intake (ingest API)
+  version: 1.0.0
+  license:
+    name: Apache-2.0
+    identifier: Apache-2.0
+  description: |
+    How the site widget (`widget/`) sends a report to the Bug Stream server. Any server that implements
+    these two calls can receive reports from the widget: it only knows the `endpoint` address and the project widget key.
+
+    **Access.** The project widget key in the `X-Bug-Stream-Key` header (the old name `X-Adtask-Key` is accepted too).
+    The key is visible in the site's code, so it grants a single right — to send a report into its project. The server must:
+    - check the `Origin` header against the key's list of site addresses (empty list — any site);
+    - limit the number of reports per key (this server: 60 per hour);
+    - answer CORS for any origin without cookies (`Access-Control-Allow-Origin` = request Origin,
+      allowed headers `X-Bug-Stream-Key`, `X-Adtask-Key`, `Content-Type`).
+
+    **Errors** — JSON `{status, code, detail}`; the widget understands the codes below and shows a readable message.
+servers:
+  - url: https://bugs.example.com/api/ingest
+    description: Bug Stream server (default `${server}/api/ingest`)
+security:
+  - widgetKey: []
+paths:
+  /config:
+    get:
+      summary: Project of the key — for the report form in the widget
+      operationId: getConfig
+      responses:
+        "200":
+          description: Project, its services (modules) and network filter
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WidgetConfig" }
+        "401": { $ref: "#/components/responses/KeyError" }
+        "403": { $ref: "#/components/responses/OriginError" }
+  /reports:
+    post:
+      summary: Send a report
+      operationId: createReport
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [meta]
+              properties:
+                meta:
+                  description: JSON (Content-Type application/json) — report fields and page info
+                  $ref: "#/components/schemas/ReportMeta"
+                events:
+                  description: JSON array of recorded events
+                  type: array
+                  items: { $ref: "#/components/schemas/CapturedEvent" }
+                video:
+                  description: Tab video (video/webm); event time `t` counts from its start
+                  type: string
+                  format: binary
+                screenshot:
+                  description: Screenshot (image/png)
+                  type: string
+                  format: binary
+                thumbnail:
+                  description: Thumbnail for the report list (image/jpeg, width 480)
+                  type: string
+                  format: binary
+                replay:
+                  description: Last 2 minutes — array of rrweb events, JSON, gzip-compressed (replay.json.gz)
+                  type: string
+                  format: binary
+            encoding:
+              meta: { contentType: application/json }
+              events: { contentType: application/json }
+      responses:
+        "201":
+          description: Report created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, url]
+                properties:
+                  id: { type: string, description: "Report ID (UUID)" }
+                  url: { type: string, format: uri, description: "Link to the report page" }
+        "400": { $ref: "#/components/responses/Validation" }
+        "401": { $ref: "#/components/responses/KeyError" }
+        "403": { $ref: "#/components/responses/OriginError" }
+        "413": { description: File too large (server or proxy limit) }
+        "429":
+          description: "Report limit exceeded: `WIDGET_RATE_LIMIT`"
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Problem" }
+components:
+  securitySchemes:
+    widgetKey:
+      type: apiKey
+      in: header
+      name: X-Bug-Stream-Key
+  responses:
+    Validation:
+      description: "Invalid fields: `VALIDATION`"
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    KeyError:
+      description: "No key (`WIDGET_KEY_REQUIRED`), the key is invalid or disabled (`WIDGET_KEY_INVALID`)"
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    OriginError:
+      description: "Site not allowed for the key: `WIDGET_ORIGIN`"
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Problem" }
+  schemas:
+    Problem:
+      type: object
+      required: [status, code]
+      properties:
+        status: { type: integer }
+        code: { type: string }
+        detail: { type: string }
+    WidgetConfig:
+      type: object
+      required: [projectKey, projectName, services, networkIgnore]
+      properties:
+        projectKey: { type: string, example: ESOC }
+        projectName: { type: string, example: E-Social }
+        services:
+          description: Services of the project — picked in the form
+          type: array
+          items:
+            type: object
+            required: [id, name]
+            properties:
+              id: { type: string }
+              name: { type: string }
+        networkIgnore:
+          description: Network filter — substrings or `*` patterns; the widget does not send such requests
+          type: array
+          items: { type: string }
+          example: ["collector.github.com", "*/metrics*"]
+    ReportMeta:
+      type: object
+      required: [title, pageUrl]
+      properties:
+        title: { type: string, maxLength: 500 }
+        description: { type: [string, "null"] }
+        serviceId: { type: [string, "null"], description: "Service from /config; empty — the server resolves it by pageUrl" }
+        severity: { type: [string, "null"], enum: [LOW, MEDIUM, HIGH, CRITICAL, null] }
+        tags: { type: array, items: { type: string } }
+        source: { type: string, enum: [WIDGET, EXTENSION, SCREENSHOT, REPLAY, API], default: WIDGET }
+        pageUrl: { type: string, maxLength: 2048 }
+        pageTitle: { type: [string, "null"] }
+        recordedAt: { type: string, format: date-time }
+        durationMs: { type: integer, description: "Video duration without pauses / replay length; 0 for a screenshot" }
+        timezone: { type: [string, "null"], example: Asia/Baku }
+        locale: { type: [string, "null"], example: az-AZ }
+        location: { type: [string, "null"], description: "Country by browser language" }
+        os: { type: [string, "null"] }
+        osVersion: { type: [string, "null"] }
+        browser: { type: [string, "null"] }
+        browserVersion: { type: [string, "null"] }
+        windowSize: { type: [string, "null"], example: 1536x791 }
+        screenSize: { type: [string, "null"], example: 1920x1080 }
+        devicePixelRatio: { type: [number, "null"] }
+        networkType: { type: [string, "null"], example: 4g }
+        networkDownlink: { type: [number, "null"], description: Mbit/s }
+        networkRtt: { type: [integer, "null"], description: ms }
+        extensionVersion: { type: [string, "null"], description: "Client version: 'bug-stream-widget 0.2.0 (en)' or the extension version" }
+        reporterEmail: { type: [string, "null"], description: "Who reported it (from the site). If it matches a server user, they become the author" }
+        reporterName: { type: [string, "null"] }
+        environment: { type: [string, "null"], description: "Environment code from the admin panel (DEV, TEST, STAGE, PROD or your own). Empty — environment of the service resolved by pageUrl" }
+    CapturedEvent:
+      type: object
+      required: [kind, ts, summary]
+      properties:
+        kind: { type: string, enum: [console, network, action, navigation, custom] }
+        ts: { type: integer, description: Unix time, ms }
+        t: { type: integer, description: "ms from the start of the recording (video: without pauses); events are synced with the video by it" }
+        level: { type: [string, "null"], description: "console: log/info/warn/error/debug; action: click/dblclick/input/change/submit/key; custom: info" }
+        summary: { type: string, description: Line for the event list }
+        method: { type: [string, "null"], description: "network: GET/POST…" }
+        status: { type: [integer, "null"], description: "network: HTTP status, 0 — the request failed" }
+        duration: { type: [integer, "null"], description: "network: ms" }
+        payload:
+          type: object
+          description: |
+            Details per event kind:
+            - network: url, statusText, requestHeaders, requestBody, responseHeaders, responseBody, size, truncated, error, type (fetch/xhr/resource)
+            - console: args, stack, source
+            - action: selector, tag, text, value, href, x, y
+            - navigation: from, to, type (push/replace/back/forward/hash/load/start)
+            - custom: type = app-context (context — application data), log (data), pause/resume
+            - frame: iframe address, if the event came from it
+          additionalProperties: true

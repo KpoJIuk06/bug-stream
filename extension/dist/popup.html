@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Bug Stream</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="popup">
+    <header>
+      <span class="logo"><img src="icons/32.png" alt="" />Bug Stream</span>
+      <a id="open-site" class="btn ghost hidden" target="_blank" style="height: 28px; font-size: 13px" data-i18n>Open site</a>
+    </header>
+
+    <!-- Sign-in -->
+    <main id="view-login" class="hidden"><div id="login-root"></div></main>
+
+    <!-- Main screen -->
+    <main id="view-main" class="hidden">
+      <div id="recording" class="recording hidden">
+        <span class="rec-dot" id="rec-dot"></span><span id="rec-label" data-i18n>Recording</span><span class="time" id="rec-time">0:00</span>
+      </div>
+      <div class="actions">
+        <button class="btn primary big record" id="btn-record" data-i18n>Record tab</button>
+        <div class="row2">
+          <button class="btn" id="btn-screenshot" data-i18n>Screenshot</button>
+          <button
+            class="btn"
+            id="btn-replay"
+            title="Instant replay: save what happened on the page during the last 2 minutes"
+            data-i18n-title="Instant replay: save what happened on the page during the last 2 minutes"
+            data-i18n
+          >Last 2 min</button>
+        </div>
+        <button class="btn primary big hidden" id="btn-stop" data-i18n>Stop and open the report</button>
+        <div class="row2 hidden" id="rec-controls">
+          <button class="btn" id="btn-pause" data-i18n>Pause</button>
+          <button class="btn ghost" id="btn-cancel" data-i18n>Cancel</button>
+        </div>
+      </div>
+      <div id="main-error" class="error-box hidden" style="margin-top: 12px"></div>
+
+      <div id="unsaved" class="unsaved hidden">
+        <h2 data-i18n>Unsaved recordings</h2>
+        <ul id="unsaved-list"></ul>
+      </div>
+
+      <details class="settings" id="settings">
+        <summary data-i18n>Recording settings</summary>
+        <label class="field">
+          <span data-i18n>Maximum video length</span>
+          <select id="pref-max">
+            <option value="5" data-i18n>5 minutes</option>
+            <option value="10" data-i18n>10 minutes</option>
+            <option value="20" data-i18n>20 minutes</option>
+            <option value="30" data-i18n>30 minutes</option>
+          </select>
+          <small data-i18n>The video is written to the computer's disk, not to memory. 10 minutes ≈ 110 MB.</small>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="pref-autopause" />
+          <span
+            ><span data-i18n>Pause when nothing happens</span>
+            <small
+              ><span data-i18n>No mouse movement or key presses for</span>
+              <select id="pref-idle">
+                <option value="30" data-i18n>30 s</option>
+                <option value="60" data-i18n>1 min</option>
+                <option value="120" data-i18n>2 min</option>
+                <option value="300" data-i18n>5 min</option>
+              </select>
+              <span data-i18n>or the tab is hidden — recording pauses and resumes by itself when you come back.</span></small
+            >
+          </span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="pref-replay" />
+          <span
+            >Instant replay
+            <small data-cmd="save-replay" data-i18n-html>The extension keeps a recording of the last 2 minutes of the page in memory (no video — page snapshots). Nothing is sent until you press “Last 2 min” or <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Y</kbd>.</small>
+          </span>
+        </label>
+        <label class="check hidden" id="site-row">
+          <input type="checkbox" id="pref-site" />
+          <span><span data-i18n>Instant replay on this site</span> <small class="mono" id="site-origin"></small></span>
+        </label>
+        <label class="field" style="margin-top: 10px">
+          <span data-i18n>Language</span>
+          <select id="pref-locale">
+            <option value="en">English</option>
+            <option value="ru">Русский</option>
+            <option value="az">Azərbaycanca</option>
+          </select>
+        </label>
+      </details>
+
+      <p class="hint" id="hint" data-cmd="toggle-recording" data-i18n-html>The recording captures the tab video, console, network requests and your actions, including frames. Start or stop: <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd></p>
+    </main>
+
+    <footer id="footer" class="hidden">
+      <span class="user"><span class="avatar" id="avatar"></span><span><b id="user-name"></b><br /><span class="faint" id="server-label"></span></span></span>
+      <button class="btn ghost" id="btn-logout" style="height: 28px; font-size: 12px" data-i18n>Sign out</button>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

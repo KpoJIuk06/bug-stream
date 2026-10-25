@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "server": {
+      "title": "Bug Stream server address",
+      "description": "For example https://bugs.example.com — preset in the extension, users do not need to enter it.",
+      "type": "string"
+    }
+  }
+}

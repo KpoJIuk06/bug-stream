@@ -1,0 +1,26 @@
+# TLS_MODE=nginx: certificate from the certs/ folder (fullchain + key).
+map $http_x_forwarded_proto $bs_proto {
+    default https;
+}
+
+server {
+    listen 80 default_server;
+    server_name ${APP_DOMAIN};
+    return 301 https://${APP_DOMAIN}$request_uri;
+}
+
+server {
+    listen 443 ssl default_server;
+    http2 on;
+    server_name ${APP_DOMAIN};
+
+    ssl_certificate     /etc/nginx/certs/${TLS_CERT};
+    ssl_certificate_key /etc/nginx/certs/${TLS_KEY};
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    include /etc/nginx/snippets/app.conf;
+}

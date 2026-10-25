@@ -1,0 +1,39 @@
+# secrets
+.env
+*.pem
+*.key
+*.crt
+*.p12
+server/backend/maven/settings.xml
+server/frontend/npm/.npmrc
+widget/.npmrc
+extension/.npmrc
+extension/keys/*
+!extension/keys/README.md
+
+# data and extension packages (built by scripts/pack-extension.ps1)
+server/storage/*
+!server/storage/.gitkeep
+server/extension-dist/*
+!server/extension-dist/README.md
+
+# build output
+node_modules/
+target/
+server/frontend/dist/
+build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# local archives and logs
+/*.zip
+*.log
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
