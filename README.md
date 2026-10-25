@@ -48,9 +48,9 @@ macOS, or Docker Engine 24+ with Compose v2 on Linux), **Git** and **Google Chro
 **1. Get the code and create the settings file** — random passwords are generated for you:
 
 ```bash
-git clone https://github.com/<you>/bug-stream.git
+git clone https://github.com/KpoJIuk06/bug-stream.git
 cd bug-stream/server
-./scripts/init-env.sh                # Linux / macOS — press Enter for "localhost"
+sh scripts/init-env.sh                # Linux / macOS — press Enter for "localhost"
 ```
 ```powershell
 cd bug-stream\server
@@ -90,7 +90,7 @@ Port 80 is busy? Set `HTTP_PORT=8080` and `APP_PUBLIC_URL=http://localhost:8080`
 | Widget in your own web app | [widget/README.md](widget/README.md) |
 | What is recorded and where data goes (for a security review) | [extension/SECURITY.md](extension/SECURITY.md), [widget/SECURITY.md](widget/SECURITY.md) |
 
-In short: `./scripts/init-env.sh bugs.example.com` → put the site behind HTTPS (your load balancer, or a certificate in
+In short: `sh scripts/init-env.sh bugs.example.com` → put the site behind HTTPS (your load balancer, or a certificate in
 `server/certs/`) → `docker compose up -d --build` → in **Administration** set up sign-in methods, SMTP, Jira and Slack →
 build the extension with your address: `cd extension && npm ci && BUGSTREAM_SERVER=https://bugs.example.com npm run build`.
 

@@ -28,7 +28,7 @@ server/
 
 ## 2. Configuration
 ```bash
-./scripts/init-env.sh bugs.example.com        # Linux / macOS
+sh scripts/init-env.sh bugs.example.com        # Linux / macOS
 ```
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\init-env.ps1 -Domain bugs.example.com   # Windows

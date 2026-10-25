@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # Creates server/.env from .env.example with random secrets.
-#   ./scripts/init-env.sh                       # asks for the domain (Enter = localhost)
-#   ./scripts/init-env.sh bugs.example.com      # real installation behind HTTPS
+#   sh scripts/init-env.sh                       # asks for the domain (Enter = localhost)
+#   sh scripts/init-env.sh bugs.example.com      # real installation behind HTTPS
 # Never overwrites an existing .env.
 set -eu
 cd "$(dirname "$0")/.."
