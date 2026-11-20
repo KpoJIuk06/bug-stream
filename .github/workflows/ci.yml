@@ -16,6 +16,8 @@ jobs:
         working-directory: server/backend
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -30,6 +32,8 @@ jobs:
         working-directory: server/frontend
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -46,6 +50,8 @@ jobs:
         working-directory: extension
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -61,6 +67,8 @@ jobs:
         working-directory: widget
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -76,6 +84,8 @@ jobs:
         working-directory: server
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Build the images
         run: |
           cp .env.example .env

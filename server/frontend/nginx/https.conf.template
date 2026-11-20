@@ -4,13 +4,13 @@ map $http_x_forwarded_proto $bs_proto {
 }
 
 server {
-    listen 80 default_server;
+    listen 8080 default_server;
     server_name ${APP_DOMAIN};
     return 301 https://${APP_DOMAIN}$request_uri;
 }
 
 server {
-    listen 443 ssl default_server;
+    listen 8443 ssl default_server;
     http2 on;
     server_name ${APP_DOMAIN};
 

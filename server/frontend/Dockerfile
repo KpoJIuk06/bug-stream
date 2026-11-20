@@ -16,12 +16,17 @@ COPY . .
 RUN rm -f .npmrc npm/.npmrc && npm run build
 
 # ---- run ----
-FROM ${REGISTRY}nginx:1.27-alpine
+# Unprivileged nginx: the process runs as uid 101 (nginx), not root; listens on 8080/8443
+FROM ${REGISTRY}nginxinc/nginx-unprivileged:1.27-alpine
+USER root
 RUN rm -f /etc/nginx/conf.d/default.conf
 COPY nginx/http.conf.template nginx/https.conf.template /etc/nginx/bugstream/
 COPY nginx/snippets/ /etc/nginx/snippets/
 COPY nginx/15-bugstream-config.sh /docker-entrypoint.d/
 RUN sed -i 's/\r$//' /docker-entrypoint.d/15-bugstream-config.sh /etc/nginx/bugstream/* /etc/nginx/snippets/* \
- && chmod +x /docker-entrypoint.d/15-bugstream-config.sh
+ && chmod +x /docker-entrypoint.d/15-bugstream-config.sh \
+ && mkdir -p /etc/nginx/templates \
+ && chown -R nginx:nginx /etc/nginx/templates /etc/nginx/conf.d
 COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 80 443
+USER nginx
+EXPOSE 8080 8443

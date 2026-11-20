@@ -5,7 +5,7 @@ map $http_x_forwarded_proto $bs_proto {
 }
 
 server {
-    listen 80 default_server;
+    listen 8080 default_server;
     server_name ${APP_DOMAIN};
     include /etc/nginx/snippets/app.conf;
 }

@@ -87,8 +87,8 @@ services:
       - ./certs:/etc/nginx/certs:ro
       - ./extension-dist:/usr/share/nginx/extension:ro   # adtask.crx + update.xml (extension/scripts/pack-extension.ps1)
     ports:
-      - "${HTTP_PORT:-80}:80"
-      - "${HTTPS_PORT:-443}:443"
+      - "${HTTP_PORT:-80}:8080"   # nginx runs unprivileged inside the container
+      - "${HTTPS_PORT:-443}:8443"
     depends_on:
       - backend
 
